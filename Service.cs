@@ -66,7 +66,7 @@ namespace ExpressPay.SDK
 			{
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
-
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 			var response = await client.GetAsync(host);
 
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -155,6 +155,8 @@ namespace ExpressPay.SDK
 				requestParams.Add("signature", SignatureHelper.Compute(requestParams, secretWord, "add-invoice"));
 			}
 
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
 			var content = new FormUrlEncodedContent(requestParams);
 
 			var response = await client.PostAsync(host, content);
@@ -192,6 +194,8 @@ namespace ExpressPay.SDK
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
 
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
 			var response = await client.GetAsync(host);
 
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -224,6 +228,8 @@ namespace ExpressPay.SDK
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
 
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
 			var response = await client.GetAsync(host);
 
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -254,6 +260,8 @@ namespace ExpressPay.SDK
 			{
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
+
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
 			var response = await client.DeleteAsync(host);
 
@@ -293,6 +301,8 @@ namespace ExpressPay.SDK
 			{
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
+
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
 			var response = await client.GetAsync(host);
 
@@ -360,6 +370,7 @@ namespace ExpressPay.SDK
 				requestParams.Add("signature", SignatureHelper.Compute(requestParams, secretWord, "add-card-invoice"));
 			}
 
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
 			var content = new FormUrlEncodedContent(requestParams);
 
@@ -430,6 +441,8 @@ namespace ExpressPay.SDK
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
 
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
 			var response = await client.GetAsync(host);
 
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -456,6 +469,8 @@ namespace ExpressPay.SDK
 			{
 				requestParams.Add("signature", SignatureHelper.Compute(requestParams, secretWord, "reverse-card-invoice"));
 			}
+
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
 			var content = new FormUrlEncodedContent(requestParams);
 
@@ -548,6 +563,8 @@ namespace ExpressPay.SDK
 			// т.к он не учавствует в выставлении счета 
 			requestParams.Remove("Token");
 
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
 			var content = new FormUrlEncodedContent(requestParams);
 
 			var response = await client.PostAsync(host, content);
@@ -600,6 +617,8 @@ namespace ExpressPay.SDK
 			// т.к он не учавствует в выставлении счета 
 			requestParams.Remove("Token");
 
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
 			var content = new FormUrlEncodedContent(requestParams);
 
 			var response = await client.PostAsync(host, content);
@@ -641,6 +660,8 @@ namespace ExpressPay.SDK
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
 
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
 			var response = await client.GetAsync(host);
 
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -672,6 +693,8 @@ namespace ExpressPay.SDK
 			{
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
+
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
 			var response = await client.GetAsync(host);
 
@@ -705,6 +728,8 @@ namespace ExpressPay.SDK
 			{
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
+
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
 			var response = await client.GetAsync(host);
 
