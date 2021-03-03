@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ExpressPaySDK</name>
+    </assembly>
+    <members>
+        <member name="T:ExpressPay.SDK.ExpressPaySdk">
+            <summary>
+            SDK
+            </summary>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.#ctor(System.Boolean,System.String,System.Boolean,System.String)">
+            <summary>
+            В конструктор передаем необходимы настройки
+            </summary>
+            <param name="isTest">Использовать тестовый сервер</param>
+            <param name="token">API-ключ</param>
+            <param name="useSignature">Использовать цифровую подпись</param>
+            <param name="secretWord">Секретное слово</param>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.GetInvoices(System.String,System.String,System.String,System.Nullable{System.Int32})">
+            <summary>
+            Список счетов по парметрам
+            Если параметры не заданы возращаются платежи за полседние 30 дней
+            </summary>
+            <param name="accountNo">Номер счета</param>
+            <param name="from">Дата выставления с - начало периода Формат - yyyyMMdd</param>
+            <param name="to">Дата выставления по - конец периода Формат - yyyyMMdd</param>
+            <param name="status">Статус счета на оплату Формат - yyyyMMdd</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.AddInvoice(System.String,System.Decimal,System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Int32,System.String,System.String,System.Int32)">
+            <summary>
+            Выставление счета
+            </summary>
+            <param name="accountNo">Номер лицевого счета. Разрешенные символы: цифры, буквы(латиница, кириллица), 
+            тире(-), точка(.), правый слэш(/), левый слэш(\), двоеточие(:) и нижнее подчеркивание(_).</param>
+            <param name="amount">Сумма счета на оплату.Разделителем дробной и целой части является символ запятой</param>
+            <param name="currency">Код валюты</param>
+            <param name="expiration">Дата истечения срока действия выставления счета на оплату.
+            Форматы – yyyyMMdd, yyyyMMddHHmm</param>
+            <param name="info">Назначение платежа</param>
+            <param name="surname">Фамилия</param>
+            <param name="firstName">Имя</param>
+            <param name="patronymic">Отчество</param>
+            <param name="city">Город</param>
+            <param name="street">Улица</param>
+            <param name="house">Дом</param>
+            <param name="building">Корпус</param>
+            <param name="apartment">Квартира</param>
+            <param name="isNameEditable">При оплате разрешено изменять ФИО плательщика
+            0 – нет, 1 – да</param>
+            <param name="isAddressEditable">При оплате разрешено изменять адрес плательщика
+            0 – нет, 1 – да</param>
+            <param name="isAmountEditable">	При оплате разрешено изменять сумму оплаты
+            0 – нет, 1 – да</param>
+            <param name="emailNotification"></param>
+            <param name="smsPhone"></param>
+            <param name="returnInvoiceUrl"></param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.GetInvoiceDetails(System.Int32,System.Int32)">
+            <summary>
+            Детальная информации по счету
+            </summary>
+            <param name="invoiceNo">Номер счета полученный при выставлении</param>
+            <param name="returnInvoiceUrl">Вернуть в ответе публичную ссылку на счет 
+            0 – нет, 1 – да (0 - по умолчанию)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.GetInvoiceStatus(System.Int32)">
+            <summary>
+            Статуса счета
+            </summary>
+            <param name="invoiceNo">Номер счета полученный при выставлении</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.CancelInvoice(System.Int32)">
+            <summary>
+            Отмена счета
+            </summary>
+            <param name="invoiceNo">Номер счета полученный при выставлении</param>
+            <returns>HTTP код</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.GetQrCode(System.Int32,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Получение Qr-кода
+            </summary>
+            <param name="invoiceNo">Номер счета</param>
+            <param name="viewType">Тип возвращаемого значения. Принимает два параметра:
+            base64 - возвращает изображение в формате base64;
+            text - возвращает ссылку;</param>
+            <param name="imageWidth">Ширина qr-кода</param>
+            <param name="imageHeight">Высота qr-кода</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.AddCardInvoice(System.String,System.Decimal,System.Int32,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32},System.String,System.Int32)">
+            <summary>
+            Выставить счет для оплаты по карте
+            </summary>
+            <param name="accountNo">Номер лицевого счета</param>
+            <param name="expiration">Дата истечения срока действия выставленного счета на оплату. Формат - yyyyMMdd</param>
+            <param name="amount">	Сумма счета на оплату. Сумма счета должна быть не менее 1,00 BYN.
+            Разделителем дробной и целой части является символ запятой</param>
+            <param name="currency">Код валюты</param>
+            <param name="info">Назначение платежа</param>
+            <param name="returnUrl">Адрес для перенаправления пользователя в случае успешной оплаты</param>
+            <param name="failUrl">Адрес для перенаправления пользователя в случае неуспешной оплаты</param>
+            <param name="language">Язык в кодировке ISO 639-1. Если не указан, будет использован язык по умолчанию</param>
+            <param name="sessionTimeoutSec">Продолжительность сессии в секундах.
+            В случае если параметр не задан, будет использовано значение 1200 секунд(20 минут).
+            Если в запросе присутствует параметр ExpirationDate, то значение параметра SessionTimeoutSecs не учитывается.
+            Значение SessionTimeoutSecs должно находится в пределах от 60 до 1200 сек(1-20 мин).</param>
+            <param name="expirationDate">Время жизни заказа. Формат yyyyMMddHHmmss. Если этот параметр не передаётся в 
+            запросе, то для определения времени жизни сессии используется SessionTimeoutSecs.</param>
+            <param name="returnInvoiceUrl">Вернуть в ответе публичную ссылку на счет
+            0 – нет, 1 – да(0 - по умолчанию)</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.GetPaymentForm(System.Int32)">
+            <summary>
+            Ссылку на форму оплаты для оплаты счета по карте
+            </summary>
+            <param name="cardInvoieNo">Номер счета по карте, полученный с помощью метода “Выставление счета по карте”</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.GetCardInvoceStatus(System.Int32,System.String)">
+            <summary>
+            Статус счета по карте
+            </summary>
+            <param name="cardInvoiceNo">Номер счета по карте, полученный с помощью метода “Выставление счета по карте”</param>
+            <param name="language">Язык в кодировке ISO 639-1. Если не указан, считается, что язык – русский. 
+            Сообщение об ошибке будет возвращено именно на этом языке.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.ReverseCardPayment(System.Int32)">
+            <summary>
+            Отмена платежа по карте 
+            </summary>
+            <param name="cardInvoiceNo">Номер счета по карте, полученный с помощью метода “Выставление счета по карте”</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.AddWebInvoice(System.Int32,System.String,System.Decimal,System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Int32,System.String,System.String)">
+            <summary>
+            Выставить новый счет. В данном методе цифровая подпись является обязательным параметром.
+            </summary>
+            <param name="serviceId">Номер услуги</param>
+            <param name="accountNo">Номер лицевого счета</param>
+            <param name="amount">Сумма счета на оплату. Разделителем дробной и целой части является символ запятой</param>
+            <param name="currency">Код валюты</param>
+            <param name="expiration">Дата истечения срока действия выставлена счета на оплату. Формат - yyyyMMdd</param>
+            <param name="info">Назначение платежа</param>
+            <param name="surname">Фамилия</param>
+            <param name="firstName">Имя</param>
+            <param name="patronymic">Отчество</param>
+            <param name="city">Улица</param>
+            <param name="street">Дом</param>
+            <param name="house">Улица</param>
+            <param name="building">Корпус</param>
+            <param name="apartment">Квартира</param>
+            <param name="isNameEditable">При оплате разрешено изменять ФИО плательщика 0 – нет, 1 – да</param>
+            <param name="isAddressEditable">При оплате разрешено изменять адрес плательщика 0 – нет, 1 – да</param>
+            <param name="isAmountEditable">При оплате разрешено изменять сумму оплаты 0 – нет, 1 – да</param>
+            <param name="emailNotification">Адрес электронной почты, на который будет отправлено уведомление о выставлении счета</param>
+            <param name="smsPhone">Номер мобильного телефона, на который будет отправлено SMS-сообщение о выставлении счета</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.AddWebCardInvoice(System.Int32,System.String,System.Decimal,System.Int32,System.String,System.String)">
+            <summary>
+            Выставить счет для оплаты по карте. В данном методе цифровая подпись является обязательным параметром.
+            </summary>
+            <param name="serviceId">Номер услуги</param>
+            <param name="accountNo">Номер лицевого счета</param>
+            <param name="amount">Сумма счета на оплату. Разделителем дробной и целой части является символ запятой</param>
+            <param name="currency">Код валюты</param>
+            <param name="expiration">Дата истечения срока действия выставлена счета на оплату. Формат - yyyyMMdd</param>
+            <param name="info">Назначение платежа</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.GetPayments(System.String,System.String,System.String)">
+            <summary>
+            Список платежей
+            Если параметры не заданы возращаются платежи за полседние 30 дней
+            </summary>
+            <param name="from">Дата оплаты с – начало периода. Формат - yyyyMMdd</param>
+            <param name="to">Дата оплаты по – конец периода. Формат - yyyyMMdd</param>
+            <param name="accountNo">Номер лицевого счета</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.GetPaymentDetail(System.Int32)">
+            <summary>
+            Детали платежа
+            </summary>
+            <param name="paymentNo">Номер платежа</param>
+            <returns>json</returns>
+        </member>
+        <member name="M:ExpressPay.SDK.ExpressPaySdk.GetBalance(System.String)">
+            <summary>
+            Баланс по лицевому счету
+            </summary>
+            <param name="accountNo">Номер лицевого счета</param>
+            <returns>json</returns>
+        </member>
+        <member name="T:ExpressPay.SDK.Utils.SignatureHelper">
+            <summary>
+            Статический класс получение цифровой подписи
+            </summary>
+        </member>
+        <member name="M:ExpressPay.SDK.Utils.SignatureHelper.Compute(System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String)">
+            <summary>
+            Вычисление цифровой подписи
+            </summary>
+            <param name="requestParams">Входные параметры</param>
+            <param name="secretWord">Секретное слово</param>
+            <param name="action">Используемый метод</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

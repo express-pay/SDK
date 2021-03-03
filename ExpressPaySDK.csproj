@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net45;net451;net452;net46;net461;net472;net48;netcoreapp1;netcoreapp11;netcoreapp2;netcoreapp21;netcoreapp3;netcoreapp31;net50;</TargetFrameworks>
+    <Description>Официальное SDK для пользования API сервиса Экспресс Платежи</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RootNamespace>ExpressPay.SDK</RootNamespace>
+    <PackageId>ExpressPay.SDK</PackageId>
+    <Authors>ООО «ТРИИНКОМ»</Authors>
+    <Company>ООО «ТРИИНКОМ»</Company>
+    <Product>Экспресс Платежи</Product>
+    <Copyright>ООО «ТРИИНКОМ» – официальный агрегатор системы ЕРИП (АИС «Расчет»)</Copyright>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://express-pay.by/</PackageProjectUrl>
+    <PackageIcon>ic_bottom_logo.png</PackageIcon>
+    <RepositoryUrl>https://github.com/express-pay/sdk</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>SDK, Payment</PackageTags>
+    <PackageReleaseNotes>Первый релиз</PackageReleaseNotes>
+    <NeutralLanguage>ru</NeutralLanguage>
+    <Version>1.0.1</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile>E:\Job\examples\ExpressPaySDK\ExpressPaySDK.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>E:\Job\examples\ExpressPaySDK\ExpressPaySDK.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="ic_bottom_logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>..\..\app\app.Bitrix24App\packages\Microsoft.CSharp.4.7.0\lib\netcore50\Microsoft.CSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
