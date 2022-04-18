@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -191,6 +192,34 @@ namespace ExpressPay.SDK.Utils
                     "returntype",
                     "returninvoiceurl"
                 }
+            },
+            {
+               "invoicesv2",new[]
+                {
+                     "token",
+                     "serviceid",
+                     "accountno",
+                     "amount",
+                     "currency",
+                     "expiration",
+                     "info",
+                     "surname",
+                     "firstname",
+                     "patronymic",
+                     "city",
+                     "street",
+                     "house",
+                     "building",
+                     "apartment",
+                     "isnameeditable",
+                     "isaddresseditable",
+                     "isamounteditable",
+                     "emailnotification",
+                     "smsphone",
+                     "returntype",
+                     "returnurl",
+                     "failurl",
+                }
             }
 
         };
@@ -206,14 +235,18 @@ namespace ExpressPay.SDK.Utils
         {
             var normalizedParams = requestParams
                 .ToDictionary(k => k.Key.ToLower(), v => v.Value);
+
             var cmdFields = Mapping[action];
+
             var builder = new StringBuilder();
             foreach (var cmdField in cmdFields)
             {
                 if (normalizedParams.ContainsKey(cmdField))
-                    builder.Append(normalizedParams[cmdField]);
+                    builder.Append(normalizedParams[cmdField] as string);
             }
+
             HMACSHA1 hmac;
+
             if (string.IsNullOrWhiteSpace(secretWord))
             {
                 // В алгоритме всегда должно быть задан ключ шифрования. Если используется конструктор по умолчанию, то ключ генерируется автоматически,
@@ -224,13 +257,17 @@ namespace ExpressPay.SDK.Utils
             {
                 hmac = new HMACSHA1(HashEncoding.GetBytes(secretWord));
             }
+
             var hash = hmac.ComputeHash(
                 HashEncoding.GetBytes(builder.ToString()));
+
             var result = new StringBuilder();
+
             foreach (var item in hash)
             {
                 result.Append(item.ToString("X2"));
             }
+
             return result.ToString();
         }
     }

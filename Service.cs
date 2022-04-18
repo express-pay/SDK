@@ -13,7 +13,7 @@ namespace ExpressPay.SDK
 	{
 		private static readonly HttpClient client = new HttpClient();
 
-		private string host = "https://api.express-pay.by/v1/";
+		private string host = "https://api.express-pay.by/";
 		private readonly string token;
 		private readonly bool useSignature;
 		private readonly string secretWord;
@@ -25,15 +25,16 @@ namespace ExpressPay.SDK
 		/// <param name="token">API-ключ</param>
 		/// <param name="useSignature">Использовать цифровую подпись</param>
 		/// <param name="secretWord">Секретное слово</param>
-		public ExpressPaySdk(bool isTest, string token, bool useSignature = false, string secretWord = "")
+		public ExpressPaySdk(bool isTest, string token, bool useSignature = false, string secretWord = null)
 		{
 			if (isTest)
 			{
-				host = "https://sandbox-api.express-pay.by/v1/";
+				host = "https://sandbox-api.express-pay.by/";
 			}
 			this.token = token;
 			this.useSignature = useSignature;
 			this.secretWord = secretWord;
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 		}
 
 		/// <summary>
@@ -45,9 +46,9 @@ namespace ExpressPay.SDK
 		/// <param name="to">Дата выставления по - конец периода Формат - yyyyMMdd</param>
 		/// <param name="status">Статус счета на оплату Формат - yyyyMMdd</param>
 		/// <returns>json</returns>
-		public async Task<string> GetInvoices(string accountNo = "", string from = "", string to = "", int? status = null)
+		public async Task<string> GetInvoices(string accountNo = null, string from = null, string to = null, int? status = null)
 		{
-			host = string.Format("{0}invoices?", host);
+			host = string.Format("{0}v1/invoices?", host);
 			var requestParams = new Dictionary<string, string>
 			{
 				{"Token", token},
@@ -66,7 +67,7 @@ namespace ExpressPay.SDK
 			{
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
 			var response = await client.GetAsync(host);
 
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -107,25 +108,25 @@ namespace ExpressPay.SDK
 				string accountNo,
 				decimal amount,
 				int currency,
-				string expiration = "",
-				string info = "",
-				string surname = "",
-				string firstName = "",
-				string patronymic = "",
-				string city = "",
-				string street = "",
-				string house = "",
-				string building = "",
-				string apartment = "",
+				string expiration = null,
+				string info = null,
+				string surname = null,
+				string firstName = null,
+				string patronymic = null,
+				string city = null,
+				string street = null,
+				string house = null,
+				string building = null,
+				string apartment = null,
 				int isNameEditable = 0,
 				int isAddressEditable = 0,
 				int isAmountEditable = 0,
-				string emailNotification = "",
-				string smsPhone = "",
+				string emailNotification = null,
+				string smsPhone = null,
 				int returnInvoiceUrl = 0
 			)
 		{
-			host = string.Format("{0}invoices?token={1}", host, token);
+			host = string.Format("{0}v1/invoices?token={1}", host, token);
 			var requestParams = new Dictionary<string, string>
 			{
 				{"Token", token},
@@ -155,8 +156,6 @@ namespace ExpressPay.SDK
 				requestParams.Add("signature", SignatureHelper.Compute(requestParams, secretWord, "add-invoice"));
 			}
 
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
-
 			var content = new FormUrlEncodedContent(requestParams);
 
 			var response = await client.PostAsync(host, content);
@@ -175,7 +174,7 @@ namespace ExpressPay.SDK
 		/// <returns>json</returns>
 		public async Task<string> GetInvoiceDetails(int invoiceNo, int returnInvoiceUrl = 0)
 		{
-			host = string.Format("{0}invoices/{1}?", host, invoiceNo);
+			host = string.Format("{0}v1/invoices/{1}?", host, invoiceNo);
 
 			var requestParams = new Dictionary<string, string>
 			{
@@ -194,8 +193,6 @@ namespace ExpressPay.SDK
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
 
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
-
 			var response = await client.GetAsync(host);
 
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -210,7 +207,7 @@ namespace ExpressPay.SDK
 		/// <returns>json</returns>
 		public async Task<string> GetInvoiceStatus(int invoiceNo)
 		{
-			host = string.Format("{0}invoices/{1}/status?", host, invoiceNo);
+			host = string.Format("{0}v1/invoices/{1}/status?", host, invoiceNo);
 
 			var requestParams = new Dictionary<string, string>
 			{
@@ -228,8 +225,6 @@ namespace ExpressPay.SDK
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
 
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
-
 			var response = await client.GetAsync(host);
 
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -244,7 +239,7 @@ namespace ExpressPay.SDK
 		/// <returns>HTTP код</returns>
 		public async Task<HttpStatusCode> CancelInvoice(int invoiceNo)
 		{
-			host = string.Format("{0}invoices/{1}?", host, invoiceNo);
+			host = string.Format("{0}v1/invoices/{1}?", host, invoiceNo);
 			var requestParams = new Dictionary<string, string>
 			{
 				{"Token", token},
@@ -260,8 +255,6 @@ namespace ExpressPay.SDK
 			{
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
-
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
 			var response = await client.DeleteAsync(host);
 
@@ -282,7 +275,7 @@ namespace ExpressPay.SDK
 		/// <returns>json</returns>
 		public async Task<string> GetQrCode(int invoiceNo, string viewType = "base64", int? imageWidth = null, int? imageHeight = null)
 		{
-			host = string.Format("{0}qrcode/getqrcode/?", host);
+			host = string.Format("{0}v1/qrcode/getqrcode/?", host);
 			var requestParams = new Dictionary<string, string>
 			{
 				{"Token", token},
@@ -301,8 +294,6 @@ namespace ExpressPay.SDK
 			{
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
-
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
 			var response = await client.GetAsync(host);
 
@@ -341,14 +332,14 @@ namespace ExpressPay.SDK
 				string info,
 				string returnUrl,
 				string failUrl,
-				string expiration = "",
+				string expiration = null,
 				string language = "ru",
 				int? sessionTimeoutSec = 1200,
-				string expirationDate = "",
+				string expirationDate = null,
 				int returnInvoiceUrl = 0
 			)
 		{
-			host = string.Format("{0}cardinvoices?token={1}", host, token);
+			host = string.Format("{0}v1/cardinvoices?token={1}", host, token);
 			var requestParams = new Dictionary<string, string>
 			{
 				{"Token", token},
@@ -370,8 +361,6 @@ namespace ExpressPay.SDK
 				requestParams.Add("signature", SignatureHelper.Compute(requestParams, secretWord, "add-card-invoice"));
 			}
 
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
-
 			var content = new FormUrlEncodedContent(requestParams);
 
 			var response = await client.PostAsync(host, content);
@@ -388,7 +377,7 @@ namespace ExpressPay.SDK
 		/// <returns>json</returns>
 		public async Task<string> GetPaymentForm(int cardInvoieNo)
 		{
-			host = string.Format("{0}cardinvoices/{1}/payment?", host, cardInvoieNo);
+			host = string.Format("{0}v1/cardinvoices/{1}/payment?", host, cardInvoieNo);
 
 			var requestParams = new Dictionary<string, string>
 			{
@@ -422,7 +411,7 @@ namespace ExpressPay.SDK
 		/// <returns></returns>
 		public async Task<string> GetCardInvoceStatus(int cardInvoiceNo, string language = "ru")
 		{
-			host = string.Format("{0}cardinvoices/{1}/status?", host, cardInvoiceNo);
+			host = string.Format("{0}v1/cardinvoices/{1}/status?", host, cardInvoiceNo);
 
 			var requestParams = new Dictionary<string, string>
 			{
@@ -441,8 +430,6 @@ namespace ExpressPay.SDK
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
 
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
-
 			var response = await client.GetAsync(host);
 
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -457,7 +444,7 @@ namespace ExpressPay.SDK
 		/// <returns>json</returns>
 		public async Task<HttpStatusCode> ReverseCardPayment(int cardInvoiceNo)
 		{
-			host = string.Format("{0}cardinvoices/{1}/reverse?", host, cardInvoiceNo);
+			host = string.Format("{0}v1/cardinvoices/{1}/reverse?", host, cardInvoiceNo);
 
 			var requestParams = new Dictionary<string, string>
 			{
@@ -488,6 +475,8 @@ namespace ExpressPay.SDK
 		/// <param name="accountNo">Номер лицевого счета</param>
 		/// <param name="amount">Сумма счета на оплату. Разделителем дробной и целой части является символ запятой</param>
 		/// <param name="currency">Код валюты</param>
+		/// <param name="returnUrl">Адрес, на который происходит перенаправление после успешного выставления счета</param>
+		/// <param name="failUrl">Адрес, на который происходит перенаправление при ошибке выставления счета</param>
 		/// <param name="expiration">Дата истечения срока действия выставлена счета на оплату. Формат - yyyyMMdd</param>
 		/// <param name="info">Назначение платежа</param>
 		/// <param name="surname">Фамилия</param>
@@ -503,6 +492,10 @@ namespace ExpressPay.SDK
 		/// <param name="isAmountEditable">При оплате разрешено изменять сумму оплаты 0 – нет, 1 – да</param>
 		/// <param name="emailNotification">Адрес электронной почты, на который будет отправлено уведомление о выставлении счета</param>
 		/// <param name="smsPhone">Номер мобильного телефона, на который будет отправлено SMS-сообщение о выставлении счета</param>
+		/// <param name="returnInvoiceUrl">Вернуть в ответе публичную ссылку на счет
+		/// 0 – нет, 1 – да(0 - по умолчанию)
+		/// (Примечание: только для случая, когда ReturnType равен 2 (Json))</param>
+		/// 
 		/// <returns>json</returns>
 		public async Task<string> AddWebInvoice
 			(
@@ -510,24 +503,27 @@ namespace ExpressPay.SDK
 				string accountNo,
 				decimal amount,
 				int currency,
-				string expiration = "",
-				string info = "",
-				string surname = "",
-				string firstName = "",
-				string patronymic = "",
-				string city = "",
-				string street = "",
-				string house = "",
-				string building = "",
-				string apartment = "",
+				string returnUrl,
+				string failUrl,
+				string expiration = null,
+				string info = null,
+				string surname = null,
+				string firstName = null,
+				string patronymic = null,
+				string city = null,
+				string street = null,
+				string house = null,
+				string building = null,
+				string apartment = null,
 				int isNameEditable = 0,
 				int isAddressEditable = 0,
 				int isAmountEditable = 0,
-				string emailNotification = "",
-				string smsPhone = ""
+				string emailNotification = null,
+				string smsPhone = null,
+				int returnInvoiceUrl = 0
 			)
 		{
-			host = string.Format("{0}web_invoices", host);
+			host = string.Format("{0}v1/web_invoices", host);
 
 			var requestParams = new Dictionary<string, string>
 			{
@@ -552,9 +548,9 @@ namespace ExpressPay.SDK
 				{"EmailNotification", emailNotification},
 				{"SmsPhone", smsPhone.Trim('+')},
 				{"ReturnType", "json"},
-				{"ReturnUrl", "-"},
-				{"FailUrl", "-" },
-				{"ReturnInvoiceUrl", "1"}
+				{"ReturnUrl", returnUrl},
+				{"FailUrl", failUrl },
+				{"ReturnInvoiceUrl", returnInvoiceUrl.ToString()}
 			};
 
 			requestParams.Add("signature", SignatureHelper.Compute(requestParams, secretWord, "add-web-invoice"));
@@ -562,8 +558,6 @@ namespace ExpressPay.SDK
 			// После формирования цифровой подписи удаляем API-ключ
 			// т.к он не учавствует в выставлении счета 
 			requestParams.Remove("Token");
-
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
 			var content = new FormUrlEncodedContent(requestParams);
 
@@ -581,8 +575,13 @@ namespace ExpressPay.SDK
 		/// <param name="accountNo">Номер лицевого счета</param>
 		/// <param name="amount">Сумма счета на оплату. Разделителем дробной и целой части является символ запятой</param>
 		/// <param name="currency">Код валюты</param>
+		/// <param name="returnUrl">Адрес, на который происходит перенаправление после успешного выставления счета</param>
+		/// <param name="failUrl">Адрес, на который происходит перенаправление при ошибке выставления счета</param>
 		/// <param name="expiration">Дата истечения срока действия выставлена счета на оплату. Формат - yyyyMMdd</param>
 		/// <param name="info">Назначение платежа</param>
+		/// <param name="returnInvoiceUrl">Вернуть в ответе публичную ссылку на счет
+		/// 0 – нет, 1 – да(0 - по умолчанию)
+		/// (Примечание: только для случая, когда ReturnType равен 2 (Json))</param>
 		/// <returns>json</returns>
 		public async Task<string> AddWebCardInvoice
 			(
@@ -590,11 +589,14 @@ namespace ExpressPay.SDK
 				string accountNo, 
 				decimal amount, 
 				int currency,
+				string returnUrl,
+				string failUrl,
 				string info,
-				string expiration = ""
+				string expiration = null,
+				int returnInvoiceUrl = 0
 			)
 		{
-			host = string.Format("{0}web_cardinvoices", host);
+			host = string.Format("{0}v1/web_cardinvoices", host);
 
 			var requestParams = new Dictionary<string, string>
 			{
@@ -605,10 +607,10 @@ namespace ExpressPay.SDK
 				{"Amount", amount.ToString()},
 				{"Currency", currency.ToString()},
 				{"Info", info},
-				{"ReturnUrl", "-" },
-				{"FailUrl", "-" },
+				{"ReturnUrl", returnUrl },
+				{"FailUrl", failUrl },
 				{"ReturnType", "json" },
-				{"ReturnInvoiceUrl", "1"}
+				{"ReturnInvoiceUrl", returnInvoiceUrl.ToString()}
 			};
 
 			requestParams.Add("signature", SignatureHelper.Compute(requestParams, secretWord, "add-webcard-invoice"));
@@ -616,8 +618,6 @@ namespace ExpressPay.SDK
 			// После формирования цифровой подписи удаляем API-ключ
 			// т.к он не учавствует в выставлении счета 
 			requestParams.Remove("Token");
-
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
 			var content = new FormUrlEncodedContent(requestParams);
 
@@ -637,10 +637,10 @@ namespace ExpressPay.SDK
 		/// <param name="to">Дата оплаты по – конец периода. Формат - yyyyMMdd</param>
 		/// <param name="accountNo">Номер лицевого счета</param>
 		/// <returns>json</returns>
-		public async Task<string> GetPayments(string from = "", string to = "", string accountNo = "")
+		public async Task<string> GetPayments(string from = null, string to = null, string accountNo = null)
 		{
 
-			host = string.Format("{0}payments?", host);
+			host = string.Format("{0}v1/payments?", host);
 
 			var requestParams = new Dictionary<string, string>
 			{
@@ -660,8 +660,6 @@ namespace ExpressPay.SDK
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
 
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
-
 			var response = await client.GetAsync(host);
 
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -676,7 +674,7 @@ namespace ExpressPay.SDK
 		/// <returns>json</returns>
 		public async Task<string> GetPaymentDetail(int paymentNo)
 		{
-			host = string.Format("{0}payments/{1}?", host, paymentNo);
+			host = string.Format("{0}v1/payments/{1}?", host, paymentNo);
 
 			var requestParams = new Dictionary<string, string>
 			{
@@ -694,8 +692,6 @@ namespace ExpressPay.SDK
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
 
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
-
 			var response = await client.GetAsync(host);
 
 			var responseString = await response.Content.ReadAsStringAsync();
@@ -711,7 +707,7 @@ namespace ExpressPay.SDK
 		public async Task<string> GetBalance(string accountNo)
 		{
 
-			host = string.Format("{0}balance?", host);
+			host = string.Format("{0}v1/balance?", host);
 
 			var requestParams = new Dictionary<string, string>
 			{
@@ -729,9 +725,102 @@ namespace ExpressPay.SDK
 				host += string.Format("&{0}={1}", rp.Key, rp.Value);
 			}
 
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
-
 			var response = await client.GetAsync(host);
+
+			var responseString = await response.Content.ReadAsStringAsync();
+
+			return responseString;
+		}
+
+		/// <summary>
+		/// Выставить новый счет. В данном методе цифровая подпись является обязательным параметром.
+		/// </summary>
+		/// <param name="serviceId">Номер услуги</param>
+		/// <param name="accountNo">Номер лицевого счета</param>
+		/// <param name="amount">Сумма счета на оплату. Разделителем дробной и целой части является символ запятой</param>
+		/// <param name="currency">Код валюты</param>
+		/// <param name="returnUrl">Адрес, на который происходит перенаправление после успешного выставления счета</param>
+		/// <param name="failUrl">Адрес, на который происходит перенаправление при ошибке выставления счета</param>
+		/// <param name="expiration">Дата истечения срока действия выставлена счета на оплату. Формат - yyyyMMdd</param>
+		/// <param name="info">Назначение платежа</param>
+		/// <param name="surname">Фамилия</param>
+		/// <param name="firstName">Имя</param>
+		/// <param name="patronymic">Отчество</param>
+		/// <param name="city">Улица</param>
+		/// <param name="street">Дом</param>
+		/// <param name="house">Улица</param>
+		/// <param name="building">Корпус</param>
+		/// <param name="apartment">Квартира</param>
+		/// <param name="isNameEditable">При оплате разрешено изменять ФИО плательщика 0 – нет, 1 – да</param>
+		/// <param name="isAddressEditable">При оплате разрешено изменять адрес плательщика 0 – нет, 1 – да</param>
+		/// <param name="isAmountEditable">При оплате разрешено изменять сумму оплаты 0 – нет, 1 – да</param>
+		/// <param name="emailNotification">Адрес электронной почты, на который будет отправлено уведомление о выставлении счета</param>
+		/// <param name="smsPhone">Номер мобильного телефона, на который будет отправлено SMS-сообщение о выставлении счета</param>
+		/// 
+		/// <returns>json</returns>
+		public async Task<string> AddInvoiceV2
+			(
+				int serviceId,
+				string accountNo,
+				decimal amount,
+				int currency,
+				string returnUrl = null,
+				string failUrl = null,
+				string expiration = null,
+				string info = null,
+				string surname = null,
+				string firstName = null,
+				string patronymic = null,
+				string city = null,
+				string street = null,
+				string house = null,
+				string building = null,
+				string apartment = null,
+				int isNameEditable = 0,
+				int isAddressEditable = 0,
+				int isAmountEditable = 0,
+				string emailNotification = null,
+				string smsPhone = null
+			)
+		{
+			host = string.Format("{0}v2/invoices", host);
+
+			var requestParams = new Dictionary<string, string>
+			{
+				{"Token", token},
+				{"ServiceId", serviceId.ToString()},
+				{"AccountNo", accountNo},
+				{"Amount", amount.ToString()},
+				{"Currency", currency.ToString()},
+				{"Expiration", expiration},
+				{"Info", info},
+				{"Surname", surname},
+				{"FirstName", firstName},
+				{"Patronymic", patronymic},
+				{"City", city},
+				{"Street", street},
+				{"House", house},
+				{"Building", building},
+				{"Apartment", apartment},
+				{"IsNameEditable", isNameEditable.ToString()},
+				{"IsAddressEditable",isAddressEditable.ToString()},
+				{"IsAmountEditable", isAmountEditable.ToString()},
+				{"EmailNotification", emailNotification},
+				{"SmsPhone", smsPhone.Trim('+')},
+				{"ReturnType", "json"},
+				{"ReturnUrl", returnUrl},
+				{"FailUrl", failUrl }
+			};
+
+			requestParams.Add("signature", SignatureHelper.Compute(requestParams, secretWord, "add-web-invoice"));
+
+			// После формирования цифровой подписи удаляем API-ключ
+			// т.к он не учавствует в выставлении счета 
+			requestParams.Remove("Token");
+
+			var content = new FormUrlEncodedContent(requestParams);
+
+			var response = await client.PostAsync(host, content);
 
 			var responseString = await response.Content.ReadAsStringAsync();
 

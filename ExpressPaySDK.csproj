@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45;net451;net452;net46;net461;net472;net48;netcoreapp2;netcoreapp21;netcoreapp3;netcoreapp31;net50;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net451;net452;net46;net461;net472;net48;netcoreapp2;netcoreapp21;netcoreapp3;netcoreapp31;net50;</TargetFrameworks>
     <Description>Официальное SDK для пользования API сервиса Экспресс Платежи</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RootNamespace>ExpressPay.SDK</RootNamespace>
@@ -16,17 +16,27 @@
     <RepositoryUrl>https://github.com/express-pay/sdk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>SDK, Payment</PackageTags>
-    <PackageReleaseNotes>Первый релиз</PackageReleaseNotes>
+    <PackageReleaseNotes>Добавлены обязательные поля</PackageReleaseNotes>
     <NeutralLanguage>ru</NeutralLanguage>
-    <Version>1.0.2</Version>
+    <Version>1.0.4</Version>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile>E:\Job\examples\ExpressPaySDK\ExpressPaySDK.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DocumentationFile>E:\Job\examples\ExpressPaySDK\ExpressPaySDK.xml</DocumentationFile>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net50|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net50|AnyCPU'">
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,9 +48,14 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+    <None Include="README.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 
@@ -48,6 +63,13 @@
     <Reference Include="Microsoft.CSharp">
       <HintPath>..\..\app\app.Bitrix24App\packages\Microsoft.CSharp.4.7.0\lib\netcore50\Microsoft.CSharp.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
