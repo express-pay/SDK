@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net451;net452;net46;net461;net472;net48;netcoreapp2;netcoreapp21;netcoreapp3;netcoreapp31;net50;</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net462;net470;net471;net472;net48;net481;net60</TargetFrameworks>
     <Description>Официальное SDK для пользования API сервиса Экспресс Платежи</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RootNamespace>ExpressPay.SDK</RootNamespace>
@@ -18,9 +18,15 @@
     <PackageTags>SDK, Payment</PackageTags>
     <PackageReleaseNotes>Добавлены обязательные поля</PackageReleaseNotes>
     <NeutralLanguage>ru</NeutralLanguage>
-    <Version>1.0.4</Version>
+    <Version>1.1</Version>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <AssemblyVersion></AssemblyVersion>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <EnableNETAnalyzers>False</EnableNETAnalyzers>
+    <AnalysisLevel>none</AnalysisLevel>
+    <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
@@ -40,36 +46,28 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="ic_bottom_logo.png">
+    <Content Include="favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\ic_bottom_logo.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <None Include="LICENSE.txt">
+    <None Include="..\LICENSE.txt">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>\</PackagePath>
     </None>
-    <None Include="README.md">
+    <None Include="..\README.md">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp">
-      <HintPath>..\..\app\app.Bitrix24App\packages\Microsoft.CSharp.4.7.0\lib\netcore50\Microsoft.CSharp.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>

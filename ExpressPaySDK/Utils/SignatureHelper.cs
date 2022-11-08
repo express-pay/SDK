@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,7 +8,7 @@ namespace ExpressPay.SDK.Utils
     /// <summary>
     /// Статический класс получение цифровой подписи
     /// </summary>
-	public static class SignatureHelper
+	internal static class SignatureHelper
     {
         private static readonly Encoding HashEncoding = Encoding.UTF8;
         // Порядок следования полей при вычислении цифровой подписи.
@@ -146,6 +145,17 @@ namespace ExpressPay.SDK.Utils
                 }
             },
             {
+                "get-qr-code-by-account-no", new[]
+                {
+                    "token",
+                    "accountnumber",
+                    "amount",
+                    "viewtype",
+                    "imagewidth",
+                    "imageheight"
+                }
+            },
+            {
                 "add-web-invoice",new[]
                 {
                     "token",
@@ -220,7 +230,30 @@ namespace ExpressPay.SDK.Utils
                      "returnurl",
                      "failurl",
                 }
-            }
+            },
+            {
+                "recurring-payment-bind", new[]
+                {
+                    "token",
+                    "serviceid",
+                    "writeoffperiod",
+                    "amount",
+                    "currency",
+                    "info",
+                    "returnurl",
+                    "failurl",
+                    "language",
+                    "returntype"
+                }
+            },
+            {
+                "recurring-payment-unbind", new[]
+                {
+                    "token",
+                    "serviceid",
+                    "customerid"
+                }
+            },
 
         };
 
@@ -231,7 +264,7 @@ namespace ExpressPay.SDK.Utils
         /// <param name="secretWord">Секретное слово</param>
         /// <param name="action">Используемый метод</param>
         /// <returns></returns>
-        public static string Compute(Dictionary<string, string> requestParams, string secretWord, string action)
+        internal static string Compute(Dictionary<string, string> requestParams, string secretWord, string action)
         {
             var normalizedParams = requestParams
                 .ToDictionary(k => k.Key.ToLower(), v => v.Value);
